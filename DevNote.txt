@@ -1,0 +1,6 @@
+Single VPK gen (contents/1batch/EasyVPK-IN.bat):
+	- (contents/z-2PNGConvert.bat) uses (contents/scale.bat) with args to convert to PNG
+	- (contents/z-3Resize.bat) uses (contents/scale.bat) with args to resize to correct size
+	- (contents/z-4PNG-Pallete-256.bat) uses (contents/pngquant.exe) with args to reduce image complexity
+	- (build-autopath-nameid.bat) calls 
+	- (build-autopath-nameid.bat) gathers all info and uses (vita-mksfoex.exe) to gen .sfo file then uses (vita-pack-vpk.exe) to use.sfo file to create VPK
