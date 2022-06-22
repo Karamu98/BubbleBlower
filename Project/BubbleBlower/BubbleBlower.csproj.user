@@ -10,6 +10,9 @@
     <Compile Update="View\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="View\NullableSwitch.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="View\NullableTextField.cs">
       <SubType>UserControl</SubType>
     </Compile>

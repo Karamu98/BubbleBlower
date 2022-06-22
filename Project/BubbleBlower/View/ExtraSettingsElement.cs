@@ -30,22 +30,23 @@ namespace BubbleBlower.View
         private string m_platformStartValue = "";
         private string m_extensionsStartValue = "";
 
+        private Dictionary<MaterialSwitch, bool?> m_loadedSwitchValues = new Dictionary<MaterialSwitch, bool?>();
+
 
         public ExtraSettingsElement()
         {
             InitializeComponent();
             this.Size = new System.Drawing.Size(this.Size.Width, baseExpansionPanel.Collapse ? CollapsedHeight : baseExpansionPanel.ExpandHeight);
             m_nullableTextFields = new NullableTextField[]
-                {
-                    m_optionalPSROMPath,
-                    m_optionalDefaultIcon,
-                    m_optionalDefaultBG,
-                    m_optionalDefaultStartup,
-                    m_optionalIconHTMLID,
-                    m_optionalBGHTMLID,
-                    m_optionalStartupHTMLID
-                };
-
+            {
+                m_optionalPSROMPath,
+                m_optionalDefaultIcon,
+                m_optionalDefaultBG,
+                m_optionalDefaultStartup,
+                m_optionalIconHTMLID,
+                m_optionalBGHTMLID,
+                m_optionalStartupHTMLID
+            };
         }
 
         private string ExtensionsToString(string[]? data)
@@ -90,7 +91,24 @@ namespace BubbleBlower.View
             m_optionalBGHTMLID.SetData(m_data.BackgroundHTMLResource);
             m_optionalStartupHTMLID.SetData(m_data.StartupHTMLResource);
 
+            SetSwitchField(ref m_alwaysDefaultIcon, m_data.AlwaysDefaultIcon);
+            SetSwitchField(ref m_alwaysDefaultBackground, m_data.AlwaysDefaultBackground);
+            SetSwitchField(ref m_alwaysDefaultStartup, m_data.AlwaysDefaultStart);
+            SetSwitchField(ref m_cleanVisualGameName, m_data.SanitiseGameName);
+
             DataChanged = false;
+        }
+
+        private void SetSwitchField(ref MaterialSwitch target, bool? value)
+        {
+            m_loadedSwitchValues.Add(target, value);
+
+            if (value == null)
+            {
+                target.CheckState = CheckState.Indeterminate;
+                return;
+            }
+            target.Checked = value.Value;
         }
 
         public KeyValuePair<string, PlatformSettings> GetData()

@@ -8,14 +8,17 @@ namespace BubbleBlower
 {
     public partial class Form1 : MaterialForm
     {
-        private List<ExtraSettingsElement> m_extraSettingsDisplay;
+        private List<ExtraSettingsElement> m_extraSettingsDisplay = new List<ExtraSettingsElement>();
         private bool m_changesMade = false;
+        private Dictionary<MaterialTextBox2, string?> m_loadedTextValues = new Dictionary<MaterialTextBox2, string?>();
+        private Dictionary<MaterialSwitch, bool?> m_loadedSwitchValues = new Dictionary<MaterialSwitch, bool?>();
+        private string[] m_imageExtensions = new string[] { ".jpg", ".jpeg", ".bmp", ".png" };
 
         public Form1()
         {
             InitializeComponent();
 
-            var materialSkinManager = MaterialSkinManager.Instance;
+            MaterialSkinManager? materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
             materialSkinManager.ColorScheme = new ColorScheme(Primary.Grey800, Primary.Grey900, Primary.Grey500, Accent.Red200, TextShade.WHITE);
@@ -61,6 +64,7 @@ namespace BubbleBlower
         {
             m_changesMade = false;
 
+            m_loadedTextValues.Clear();
             // Set base settings
             PlatformSettings baseSettings = Properties.Settings.Default.GetPlatformSettings("default");
             SetTextField(ref m_psVitaROMPath, baseSettings.PSVitaROMDirectory);
@@ -71,6 +75,7 @@ namespace BubbleBlower
             SetTextField(ref m_bgHTMLID, baseSettings.BackgroundHTMLResource);
             SetTextField(ref m_startupHTMLID, baseSettings.StartupHTMLResource);
 
+            m_loadedSwitchValues.Clear();
             SetSwitchField(ref m_alwaysDefaultIcon, baseSettings.AlwaysDefaultIcon);
             SetSwitchField(ref m_alwaysDefaultBackground, baseSettings.AlwaysDefaultBackground);
             SetSwitchField(ref m_alwaysDefaultStartup, baseSettings.AlwaysDefaultStart);
@@ -92,25 +97,11 @@ namespace BubbleBlower
             }
         }
 
-        private void ExtraSettingsChanged(object? sender, EventArgs e)
-        {
-            m_changesMade = false;
-
-            foreach (var ele in m_extraSettingsDisplay)
-            {
-                if(ele.DataChanged)
-                {
-                    m_changesMade = true;
-                    break;
-                }
-            }
-
-            m_saveChangesButton.Enabled = m_changesMade;
-        }
-
         private void SetTextField(ref MaterialTextBox2 target, string? value)
         {
-            if(value == null)
+            m_loadedTextValues.Add(target, value);
+
+            if (value == null)
             {
                 target.Text = "";
                 return;
@@ -120,6 +111,8 @@ namespace BubbleBlower
 
         private void SetSwitchField(ref MaterialSwitch target, bool? value)
         {
+            m_loadedSwitchValues.Add(target, value);
+
             if (value == null)
             {
                 target.CheckState = CheckState.Indeterminate;
@@ -128,11 +121,39 @@ namespace BubbleBlower
             target.Checked = value.Value;
         }
 
+        private bool ValidateTextField(ref MaterialTextBox2 target, Func<string, bool> validations)
+        {
+            bool isValid = validations(target.Text);
+            target.SetErrorState(!isValid);
+            target.ShowAssistiveText = !isValid;
+            return isValid;
+        }
+
+        private bool IsImage(string file)
+        {
+            foreach (var ext in m_imageExtensions)
+            {
+                if(file.EndsWith(ext, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void m_saveChangesButton_Click(object sender, EventArgs e)
         {
-            // Validate base
+            /// VALIDATION
+            bool baseValid = true;
+            baseValid &= ValidateTextField(ref m_psVitaROMPath, (val) => val.Contains("0:"));
+            baseValid &= ValidateTextField(ref m_defaultIconPath, (val) => IsImage(val));
+            baseValid &= ValidateTextField(ref m_defaultBackgroundPath, (val) => IsImage(val));
+            baseValid &= ValidateTextField(ref m_defaultStartupPath, (val) => IsImage(val));
+            if(!baseValid)
+            {
+                return;
+            }
 
-            // Validate
             HashSet<string> nameTest = new HashSet<string>(m_extraSettingsDisplay.Count);
             foreach(ExtraSettingsElement? ele in m_extraSettingsDisplay)
             {
@@ -151,6 +172,8 @@ namespace BubbleBlower
                 nameTest.Add(ele.TargetPlatformName);
             }
 
+            /// SAVING
+            // Apply and get all data to extra settings
             Dictionary<string, PlatformSettings> newSettings = new Dictionary<string, PlatformSettings>(m_extraSettingsDisplay.Count);
             foreach (ExtraSettingsElement ele in m_extraSettingsDisplay)
             {
@@ -158,6 +181,85 @@ namespace BubbleBlower
                 KeyValuePair<string, PlatformSettings> cur = ele.GetData();
                 newSettings.Add(cur.Key, cur.Value);
             }
+
+            // Get all base settings
+            PlatformSettings baseSettings = new PlatformSettings();
+            baseSettings.PSVitaROMDirectory = m_psVitaROMPath.Text;
+            baseSettings.DefaultIconPath = m_defaultIconPath.Text;
+            baseSettings.DefaultBackgroundPath = m_defaultBackgroundPath.Text;
+            baseSettings.DefaultStartupPath = m_defaultStartupPath.Text;
+            baseSettings.IconHTMLResource = m_iconHTMLID.Text;
+            baseSettings.BackgroundHTMLResource = m_bgHTMLID.Text;
+            baseSettings.StartupHTMLResource = m_startupHTMLID.Text;
+            baseSettings.AlwaysDefaultIcon = m_alwaysDefaultIcon.Checked;
+            baseSettings.AlwaysDefaultBackground = m_alwaysDefaultBackground.Checked;
+            baseSettings.AlwaysDefaultStart = m_alwaysDefaultStartup.Checked;
+
+            // Set data for saving and save
+            Properties.Settings.Default.BaseSettings = baseSettings;
+            Properties.Settings.Default.PlatformSettings = newSettings;
+            Properties.Settings.Default.Save();
+
+            LoadSettings();
+        }
+
+        private void AnyItemChanged(object? sender, EventArgs e)
+        {
+            m_changesMade = false;
+            if (sender == null)
+            {
+                foreach (var ele in m_extraSettingsDisplay)
+                {
+                    if (ele.DataChanged)
+                    {
+                        m_changesMade = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                foreach(var ele in m_loadedTextValues)
+                {
+                    string? startVal = ele.Value;
+                    if(startVal == null)
+                    {
+                        m_changesMade = ele.Key.Text != "";
+                    }
+                    else
+                    {
+                        m_changesMade = ele.Key.Text != startVal;
+                    }
+                    if (m_changesMade)
+                    {
+                        break;
+                    }
+                }
+
+                foreach (var ele in m_loadedSwitchValues)
+                {
+                    bool? startVal = ele.Value;
+                    if (startVal == null)
+                    {
+                        m_changesMade = ele.Key.Text != "";
+                    }
+                    else
+                    {
+                        m_changesMade = ele.Key.Checked != startVal;
+                    }
+                    if (m_changesMade)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            m_saveChangesButton.Enabled = m_changesMade;
+        }
+
+        private void ExtraSettingsChanged(object? sender, EventArgs e)
+        {
+            AnyItemChanged(null, e);
         }
     }
 }

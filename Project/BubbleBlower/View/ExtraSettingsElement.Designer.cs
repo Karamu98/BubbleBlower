@@ -29,6 +29,12 @@
         private void InitializeComponent()
         {
             this.baseExpansionPanel = new MaterialSkin.Controls.MaterialExpansionPanel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.m_cleanVisualGameName = new MaterialSkin.Controls.MaterialSwitch();
+            this.m_alwaysDefaultStartup = new MaterialSkin.Controls.MaterialSwitch();
+            this.m_alwaysDefaultIcon = new MaterialSkin.Controls.MaterialSwitch();
+            this.m_alwaysDefaultBackground = new MaterialSkin.Controls.MaterialSwitch();
             this.panel1 = new System.Windows.Forms.Panel();
             this.m_optionalStartupHTMLID = new BubbleBlower.View.NullableTextField();
             this.m_optionalBGHTMLID = new BubbleBlower.View.NullableTextField();
@@ -40,17 +46,19 @@
             this.m_extensions = new MaterialSkin.Controls.MaterialTextBox2();
             this.m_platformName = new MaterialSkin.Controls.MaterialTextBox2();
             this.baseExpansionPanel.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // baseExpansionPanel
             // 
             this.baseExpansionPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.baseExpansionPanel.Controls.Add(this.panel1);
+            this.baseExpansionPanel.Controls.Add(this.panel3);
             this.baseExpansionPanel.Depth = 0;
             this.baseExpansionPanel.Description = "";
             this.baseExpansionPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.baseExpansionPanel.ExpandHeight = 636;
+            this.baseExpansionPanel.ExpandHeight = 644;
             this.baseExpansionPanel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.baseExpansionPanel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.baseExpansionPanel.Location = new System.Drawing.Point(3, 4);
@@ -61,10 +69,95 @@
             this.baseExpansionPanel.Size = new System.Drawing.Size(672, 636);
             this.baseExpansionPanel.TabIndex = 0;
             this.baseExpansionPanel.Title = "Platform";
+            this.baseExpansionPanel.ValidationButtonText = "APPLY";
             this.baseExpansionPanel.SaveClick += new System.EventHandler(this.materialExpansionPanel1_SaveClick);
             this.baseExpansionPanel.CancelClick += new System.EventHandler(this.materialExpansionPanel1_CancelClick);
             this.baseExpansionPanel.PanelCollapse += new System.EventHandler(this.materialExpansionPanel1_PanelCollapse);
             this.baseExpansionPanel.PanelExpand += new System.EventHandler(this.materialExpansionPanel1_PanelExpand);
+            // 
+            // panel3
+            // 
+            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel3.Controls.Add(this.panel2);
+            this.panel3.Controls.Add(this.panel1);
+            this.panel3.Location = new System.Drawing.Point(24, 64);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(621, 496);
+            this.panel3.TabIndex = 16;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.m_cleanVisualGameName);
+            this.panel2.Controls.Add(this.m_alwaysDefaultStartup);
+            this.panel2.Controls.Add(this.m_alwaysDefaultIcon);
+            this.panel2.Controls.Add(this.m_alwaysDefaultBackground);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel2.Location = new System.Drawing.Point(348, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(273, 496);
+            this.panel2.TabIndex = 16;
+            // 
+            // m_cleanVisualGameName
+            // 
+            this.m_cleanVisualGameName.AutoSize = true;
+            this.m_cleanVisualGameName.Depth = 0;
+            this.m_cleanVisualGameName.Location = new System.Drawing.Point(6, 23);
+            this.m_cleanVisualGameName.Margin = new System.Windows.Forms.Padding(0);
+            this.m_cleanVisualGameName.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.m_cleanVisualGameName.MouseState = MaterialSkin.MouseState.HOVER;
+            this.m_cleanVisualGameName.Name = "m_cleanVisualGameName";
+            this.m_cleanVisualGameName.Ripple = true;
+            this.m_cleanVisualGameName.Size = new System.Drawing.Size(217, 37);
+            this.m_cleanVisualGameName.TabIndex = 12;
+            this.m_cleanVisualGameName.Text = "Sanitise Visual Names";
+            this.m_cleanVisualGameName.UseVisualStyleBackColor = true;
+            // 
+            // m_alwaysDefaultStartup
+            // 
+            this.m_alwaysDefaultStartup.AutoSize = true;
+            this.m_alwaysDefaultStartup.Depth = 0;
+            this.m_alwaysDefaultStartup.Location = new System.Drawing.Point(6, 185);
+            this.m_alwaysDefaultStartup.Margin = new System.Windows.Forms.Padding(0);
+            this.m_alwaysDefaultStartup.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.m_alwaysDefaultStartup.MouseState = MaterialSkin.MouseState.HOVER;
+            this.m_alwaysDefaultStartup.Name = "m_alwaysDefaultStartup";
+            this.m_alwaysDefaultStartup.Ripple = true;
+            this.m_alwaysDefaultStartup.Size = new System.Drawing.Size(221, 37);
+            this.m_alwaysDefaultStartup.TabIndex = 15;
+            this.m_alwaysDefaultStartup.Text = "Always Default Startup";
+            this.m_alwaysDefaultStartup.UseVisualStyleBackColor = true;
+            // 
+            // m_alwaysDefaultIcon
+            // 
+            this.m_alwaysDefaultIcon.AutoSize = true;
+            this.m_alwaysDefaultIcon.Depth = 0;
+            this.m_alwaysDefaultIcon.Location = new System.Drawing.Point(6, 73);
+            this.m_alwaysDefaultIcon.Margin = new System.Windows.Forms.Padding(0);
+            this.m_alwaysDefaultIcon.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.m_alwaysDefaultIcon.MouseState = MaterialSkin.MouseState.HOVER;
+            this.m_alwaysDefaultIcon.Name = "m_alwaysDefaultIcon";
+            this.m_alwaysDefaultIcon.Ripple = true;
+            this.m_alwaysDefaultIcon.Size = new System.Drawing.Size(199, 37);
+            this.m_alwaysDefaultIcon.TabIndex = 13;
+            this.m_alwaysDefaultIcon.Text = "Always Default Icon";
+            this.m_alwaysDefaultIcon.UseVisualStyleBackColor = true;
+            // 
+            // m_alwaysDefaultBackground
+            // 
+            this.m_alwaysDefaultBackground.AutoSize = true;
+            this.m_alwaysDefaultBackground.Depth = 0;
+            this.m_alwaysDefaultBackground.Location = new System.Drawing.Point(6, 129);
+            this.m_alwaysDefaultBackground.Margin = new System.Windows.Forms.Padding(0);
+            this.m_alwaysDefaultBackground.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.m_alwaysDefaultBackground.MouseState = MaterialSkin.MouseState.HOVER;
+            this.m_alwaysDefaultBackground.Name = "m_alwaysDefaultBackground";
+            this.m_alwaysDefaultBackground.Ripple = true;
+            this.m_alwaysDefaultBackground.Size = new System.Drawing.Size(254, 37);
+            this.m_alwaysDefaultBackground.TabIndex = 14;
+            this.m_alwaysDefaultBackground.Text = "Always Default Background";
+            this.m_alwaysDefaultBackground.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
@@ -78,10 +171,10 @@
             this.panel1.Controls.Add(this.m_extensions);
             this.panel1.Controls.Add(this.m_platformName);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel1.Location = new System.Drawing.Point(24, 64);
+            this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(0, 0, 16, 0);
-            this.panel1.Size = new System.Drawing.Size(348, 556);
+            this.panel1.Size = new System.Drawing.Size(348, 496);
             this.panel1.TabIndex = 11;
             // 
             // m_optionalStartupHTMLID
@@ -239,6 +332,9 @@
             this.Size = new System.Drawing.Size(678, 644);
             this.baseExpansionPanel.ResumeLayout(false);
             this.baseExpansionPanel.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -257,5 +353,11 @@
         private NullableTextField m_optionalPSROMPath;
         private MaterialSkin.Controls.MaterialTextBox2 m_extensions;
         private MaterialSkin.Controls.MaterialTextBox2 m_platformName;
+        private Panel panel2;
+        private MaterialSkin.Controls.MaterialSwitch m_cleanVisualGameName;
+        private MaterialSkin.Controls.MaterialSwitch m_alwaysDefaultStartup;
+        private MaterialSkin.Controls.MaterialSwitch m_alwaysDefaultIcon;
+        private MaterialSkin.Controls.MaterialSwitch m_alwaysDefaultBackground;
+        private Panel panel3;
     }
 }
